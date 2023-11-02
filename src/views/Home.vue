@@ -1,6 +1,11 @@
 <template>
-  <h1>WEATHER APP</h1>
-  <Weather />
+  <section>
+    <div className="layout">
+      <div>
+        <Weather />
+      </div>
+    </div>
+  </section>
 </template>
 
 <script setup>
