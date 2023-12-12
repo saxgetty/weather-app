@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-64 md:mr-20 mb-10 transition duration-500 ease-in-out transform bg-white rounded-lg hover:scale-105 border flex flex-col justify-center items-center text-center p-6"
+    class="w-64 mb-10 transition duration-500 ease-in-out transform bg-white rounded-lg hover:scale-105 border flex flex-col justify-center items-center text-center p-6"
   >
     <button class="absolute top-2 right-2 text-red-500" @click="removeCard" v-if="removable">
       X
@@ -8,7 +8,7 @@
     <div class="text-md font-bold flex flex-col text-gray-900">
       <span class="uppercase">
         <div v-if="weatherData">
-          {{ getCurrentLocation(weatherData) }}
+          {{ getCurrentLocation() }}
         </div>
         <div v-else-if="error" class="text-red-500">
           {{ error }}
@@ -25,6 +25,7 @@
 
 <script>
 import LoadingCircle from "@/components/LoadingCircle.vue";
+
 export default {
   name: "WeatherCard",
   components: {
@@ -40,28 +41,43 @@ export default {
       default: false,
     },
   },
-  methods: {
-    getCurrentLocation(weatherData) {
+  setup(props) {
+    const currentDate = new Date();
+    const options = { month: "long", day: "2-digit" };
+    const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
+      currentDate
+    );
+
+    const getCurrentLocation = () => {
       if (
-        weatherData &&
-        weatherData.name &&
-        weatherData.sys &&
-        weatherData.sys.country
+        props.weatherData &&
+        props.weatherData.name &&
+        props.weatherData.sys &&
+        props.weatherData.sys.country
       ) {
-        return `${weatherData.name}, ${weatherData.sys.country}`
-      } else if (weatherData && weatherData.name) {
-        return weatherData.name
+        return `${props.weatherData.name}, ${props.weatherData.sys.country}`;
+      } else if (props.weatherData && props.weatherData.name) {
+        return props.weatherData.name;
       }
-      return "Unknown Location"
-    },
-    removeCard() {
+      return "Unknown Location";
+    };
+
+    const removeCard = () => {
       // Emit an event to notify the parent component about removal
-      this.$emit("removeCard");
-    },
-    convertToCelsius(tempF) {
-      const tempC = ((tempF - 32) * 5) / 9
-      return tempC.toFixed(2)
-    },
+      emit("removeCard");
+    };
+
+    const convertToCelsius = (tempF) => {
+      const tempC = ((tempF - 32) * 5) / 9;
+      return tempC.toFixed(2);
+    };
+
+    return {
+      formattedDate,
+      getCurrentLocation,
+      removeCard,
+      convertToCelsius,
+    };
   },
-}
+};
 </script>

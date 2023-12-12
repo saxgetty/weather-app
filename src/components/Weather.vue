@@ -1,6 +1,6 @@
 <template>
   <div class="items-center flex flex-col">
-    <div class="mr-20 flex flex-row text-gray-600 relative">
+    <div class="flex flex-row text-gray-600 relative">
       <input
         class="w-64 border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
         type="search"
@@ -18,15 +18,30 @@
       </button>
     </div>
 
-    <!-- Base Card for Geolocation -->
-  <div class="m-10 items-center flex flex-col md:flex-row md:justify-center">
-    <WeatherCard :weatherData="baseWeatherData" :key="'base'" :removable="false" :error="error" :formattedDate="formattedDate" />
-  </div>
+    <div class="m-10 flex flex-wrap justify-center">
+  <!-- Base Card -->
+  <template v-if="baseWeatherData">
+    <WeatherCard
+      :weatherData="baseWeatherData"
+      :key="'base'"
+      :removable="false"
+      :error="error"
+      class="w-full md:w-1/2 lg:w-1/4 mb-4"
+    />
+  </template>
 
   <!-- Additional Weather Cards -->
-  <div v-for="(weatherData, index) in additionalWeatherData" :key="index" class="m-10 items-center flex flex-col md:flex-row md:justify-center">
-    <WeatherCard :weatherData="weatherData" :key="index" :removable="true" @removeCard="removeCard(index)" :error="error" :formattedDate="formattedDate" />
-  </div>
+  <template v-for="(weatherData, index) in additionalWeatherData" :key="index">
+    <WeatherCard
+      :weatherData="weatherData"
+      :removable="true"
+      @removeCard="removeCard(index)"
+      :error="error"
+      class="w-full md:w-1/2 lg:w-1/4 mb-4"
+    />
+  </template>
+</div>
+
   </div>
 </template>
 
@@ -45,11 +60,6 @@ export default {
     const baseWeatherData = ref(null)
     const additionalWeatherData = ref([])
     const error = ref(null)
-    const currentDate = new Date()
-    const options = { month: "long", day: "2-digit" }
-    const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
-      currentDate
-    )
 
     const fetchWeatherByCoordinates = async (position) => {
       try {
@@ -106,11 +116,29 @@ export default {
     }
 
     const autoRefreshWeather = () => {
-      setInterval(() => {
+      setInterval(async () => {
         if (cityInput.value.trim() === "") {
           fetchUserLocationWeather()
         } else {
-          fetchWeatherData()
+          try {
+            if (baseWeatherData.value) {
+              const updatedBaseWeather = await fetchWeatherByCoords(
+                baseWeatherData.value.coord.latitude,
+                baseWeatherData.value.coord.longitude
+              )
+              baseWeatherData.value = updatedBaseWeather
+            }
+
+            for (let i = 0; i < additionalWeatherData.value.length; i++) {
+              const updatedWeather = await fetchWeatherByCoords(
+                additionalWeatherData.value[i].coord.latitude,
+                additionalWeatherData.value[i].coord.longitude
+              )
+              additionalWeatherData.value[i] = updatedWeather
+            }
+          } catch (err) {
+            error.value = "Failed to update weather data."
+          }
         }
       }, 500000) // make 150000 as default
     }
@@ -139,7 +167,6 @@ export default {
       error,
       fetchWeatherData,
       removeCard,
-      formattedDate,
     }
   },
 }
