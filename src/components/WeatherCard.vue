@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mb-10 transition duration-500 ease-in-out transform bg-white rounded-lg hover:scale-105 border flex flex-col justify-center items-center text-center p-6"
+    class="transition duration-500 ease-in-out transform bg-white rounded-lg hover:scale-105 border flex flex-col justify-center items-center text-center p-6"
   >
     <button
       class="absolute top-2 right-2 text-red-500"
@@ -13,6 +13,17 @@
       <span class="uppercase">
         <div v-if="weatherData">
           {{ getCurrentLocation() }}
+          <!-- Additional Weather Details -->
+          <p v-if="weatherData.main">
+            Temperature: {{ weatherData.main.temp }} °F
+          </p>
+          <p v-if="weatherData.weather && weatherData.weather.length > 0">
+            Description: {{ weatherData.weather[0].description }}
+          </p>
+          <p v-if="weatherData.wind">
+            Wind Speed: {{ weatherData.wind.speed }} m/s
+          </p>
+          <!-- Add more weather details as needed -->
         </div>
         <div v-else-if="error" class="text-red-500">
           {{ error }}
