@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="transition duration-500 ease-in-out transform bg-white rounded-lg hover:scale-105 border flex flex-col justify-center items-center text-center p-6"
-  >
+  <div class="transition duration-500 ease-in-out transform bg-white rounded-lg hover:scale-105 border flex flex-col justify-center items-center text-center p-6">
     <button
       class="absolute top-2 right-2 text-red-500"
       @click="removeCard"
@@ -15,13 +13,20 @@
           {{ getCurrentLocation() }}
           <!-- Additional Weather Details -->
           <p v-if="weatherData.main">
-            Temperature: {{ weatherData.main.temp }} °F
+            {{ weatherData.main.temp }} °F
           </p>
-          <p v-if="weatherData.weather && weatherData.weather.length > 0">
-            Description: {{ weatherData.weather[0].description }}
-          </p>
+          <div class="flex items-center justify-center">
+            <img
+              v-if="weatherData.weather && weatherData.weather.length > 0"
+              :src="getWeatherIconURL(weatherData)"
+              class="mx-auto"
+              alt="Weather Icon"
+              width="64"
+              height="64"
+            />
+          </div>
           <p v-if="weatherData.wind">
-            Wind Speed: {{ weatherData.wind.speed }} m/s
+            {{ weatherData.wind.speed }} m/s
           </p>
           <!-- Add more weather details as needed -->
         </div>
@@ -38,9 +43,11 @@
   </div>
 </template>
 
+
 <script>
 import { defineComponent, ref } from "vue"
 import LoadingCircle from "@/components/LoadingCircle.vue"
+import { BaseIconService } from "@/services/BaseIconService"
 
 export default defineComponent({
   name: "WeatherCard",
@@ -78,6 +85,23 @@ export default defineComponent({
       return "Unknown Location"
     }
 
+    const getWeatherIconURL = (weatherData) => {
+      if (
+        weatherData &&
+        weatherData.weather &&
+        weatherData.weather.length > 0
+      ) {
+        const weatherDescription =
+          weatherData.weather[0].description.toLowerCase()
+
+        if (weatherDescription in BaseIconService) {
+          return BaseIconService[weatherDescription]
+        }
+      }
+
+      return "https://img.icons8.com/sf-black-filled/64/default.png" // TODO: update the default icon
+    }
+
     const removeCard = () => {
       // Emit an event to notify the parent component about removal
       emit("removeCard")
@@ -91,6 +115,7 @@ export default defineComponent({
     return {
       formattedDate,
       getCurrentLocation,
+      getWeatherIconURL,
       removeCard,
       convertToCelsius,
     }
