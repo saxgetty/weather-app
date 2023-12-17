@@ -1,5 +1,5 @@
 <template>
-  <div class="transition duration-500 ease-in-out transform bg-white rounded-lg hover:scale-105 border flex flex-col justify-center items-center text-center p-6">
+  <div class="transition duration-500 ease-in-out transform bg-white rounded-xl hover:scale-105 border flex flex-col justify-center items-center text-center p-6">
     <button
       class="absolute top-2 right-2 text-red-500"
       @click="removeCard"
