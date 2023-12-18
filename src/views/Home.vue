@@ -1,9 +1,7 @@
 <template>
   <section>
-    <div className="layout">
-      <div>
-        <Weather />
-      </div>
+    <div class="flex justify-center">
+      <Weather />
     </div>
   </section>
 </template>
