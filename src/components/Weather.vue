@@ -70,55 +70,40 @@ export default {
     const error = ref(null)
     const unitType = ref("imperial")
 
-    const convertToCelsius = (tempF) => {
-      const tempC = ((tempF - 32) * 5) / 9
-      return tempC.toFixed(2)
+    const convertTemperature = (temperature, toUnit) => {
+      if (toUnit === "metric") {
+        return Number(((temperature - 32) * 5) / 9).toFixed(2) // Fahrenheit to Celsius conversion
+      } else {
+        return Number((temperature * 9) / 5 + 32).toFixed(2) // Celsius to Fahrenheit conversion
+      }
     }
 
-    const convertToFahrenheit = (tempC) => {
-      const tempF = (tempC * 9) / 5 + 32
-      return tempF.toFixed(2)
-    }
-
-    const convertToMilesPerHour = (speedMs) => {
-      const speedMph = speedMs * 2.23694 // m/s to mph conversion factor
-      return speedMph.toFixed(2)
-    }
-
-    const convertToKilometersPerHour = (speedMs) => {
-      const speedKph = speedMs * 3.6 // m/s to km/h conversion factor
-      return speedKph.toFixed(2)
+    const convertSpeed = (speed, unitType) => {
+      if (unitType === "imperial") {
+        return speed * 2.23694 // m/s to mph conversion factor
+      } else {
+        return speed * 3.6 // m/s to km/h conversion factor
+      }
     }
 
     const toggleUnit = (isChecked) => {
       unitType.value = isChecked ? "imperial" : "metric"
 
       if (baseWeatherData.value) {
-        if (unitType.value === "metric") {
-          baseWeatherData.value.main.temp = convertToCelsius(
-            baseWeatherData.value.main.temp
-          )
-          baseWeatherData.value.wind.speed = convertToKilometersPerHour(
-            baseWeatherData.value.wind.speed
-          )
-        } else {
-          baseWeatherData.value.main.temp = convertToFahrenheit(
-            baseWeatherData.value.main.temp
-          )
-          baseWeatherData.value.wind.speed = convertToMilesPerHour(
-            baseWeatherData.value.wind.speed
-          )
-        }
+        baseWeatherData.value.main.temp = convertTemperature(
+          baseWeatherData.value.main.temp,
+          unitType.value
+        )
+
+        baseWeatherData.value.wind.speed = convertSpeed(
+          baseWeatherData.value.wind.speed,
+          unitType.value
+        )
       }
 
       additionalWeatherData.value.forEach((data) => {
-        if (unitType.value === "metric") {
-          data.main.temp = convertToCelsius(data.main.temp)
-          data.wind.speed = convertToKilometersPerHour(data.wind.speed)
-        } else {
-          data.main.temp = convertToFahrenheit(data.main.temp)
-          data.wind.speed = convertToMilesPerHour(data.wind.speed)
-        }
+        data.main.temp = convertTemperature(data.main.temp, unitType.value)
+        data.wind.speed = convertSpeed(data.wind.speed, unitType.value)
       })
     }
 

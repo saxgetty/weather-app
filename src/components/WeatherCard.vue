@@ -13,7 +13,7 @@
           {{ getCurrentLocation() }}
           <!-- Additional Weather Details -->
           <p v-if="weatherData.main">
-            {{ weatherData.main.temp }} °F
+            {{ weatherData.main.temp }} {{ formatTemperature }}
           </p>
           <div class="flex items-center justify-center">
             <img
@@ -26,7 +26,7 @@
             />
           </div>
           <p v-if="weatherData.wind">
-            {{ weatherData.wind.speed }} {{ formatWindSpeed() }}
+            {{ weatherData.wind.speed }} {{ formatWindSpeed }}
           </p>
           <!-- Add more weather details as needed -->
         </div>
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue"
+import { defineComponent, watch, computed } from "vue"
 import LoadingCircle from "@/components/LoadingCircle.vue"
 import { BaseIconService } from "@/services/BaseIconService"
 
@@ -63,8 +63,8 @@ export default defineComponent({
       default: false,
     },
     unitType: {
-      type: String, // Ensure the correct type
-      default: "imperial", // Provide a default value if needed
+      type: String, 
+      default: "imperial", 
     },
   },
   setup(props, { emit }) {
@@ -74,9 +74,13 @@ export default defineComponent({
       currentDate
     )
 
-    const formatWindSpeed = () => {
+    const formatTemperature = computed(() => {
+      return `${props.unitType === 'imperial' ? '°F' : '°C'}`
+    })
+
+    const formatWindSpeed = computed(() => {
       return `${props.unitType === 'imperial' ? 'mph' : 'm/s'}`
-    }
+    })
 
     const getCurrentLocation = () => {
       if (
@@ -110,9 +114,11 @@ export default defineComponent({
     }
 
     const removeCard = () => {
-      // Emit an event to notify the parent component about removal
       emit("removeCard")
     }
+
+    watch(() => props.unitType, () => {
+    })
 
     return {
       formattedDate,
@@ -120,6 +126,7 @@ export default defineComponent({
       getWeatherIconURL,
       removeCard,
       formatWindSpeed,
+      formatTemperature,
     }
   },
 })
