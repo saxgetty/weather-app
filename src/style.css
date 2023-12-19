@@ -2,17 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
- background-color: cornflowerblue;
-}
-
-/* .layout {
-  max-width: 68.75rem;
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-} */
-
 .h0 {
   @apply font-display text-3xl font-bold md:text-5xl;
 }

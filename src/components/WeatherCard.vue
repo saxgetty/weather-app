@@ -1,5 +1,5 @@
 <template>
-  <div class="transition duration-500 ease-in-out transform bg-white rounded-xl hover:scale-105 border flex flex-col justify-center items-center text-center p-6">
+  <div class="transition duration-500 ease-in-out transform bg-white rounded-3xl hover:scale-105 border flex flex-col justify-center items-center text-center p-6">
     <button
       class="absolute top-2 right-2 text-red-500"
       @click="removeCard"
@@ -26,7 +26,7 @@
             />
           </div>
           <p v-if="weatherData.wind">
-            {{ weatherData.wind.speed }} m/s
+            {{ weatherData.wind.speed }} {{ formatWindSpeed() }}
           </p>
           <!-- Add more weather details as needed -->
         </div>
@@ -42,7 +42,6 @@
     <!-- Other weather details here -->
   </div>
 </template>
-
 
 <script>
 import { defineComponent, ref } from "vue"
@@ -63,6 +62,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    unitType: {
+      type: String, // Ensure the correct type
+      default: "imperial", // Provide a default value if needed
+    },
   },
   setup(props, { emit }) {
     const currentDate = new Date()
@@ -70,6 +73,10 @@ export default defineComponent({
     const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
       currentDate
     )
+
+    const formatWindSpeed = () => {
+      return `${props.unitType === 'imperial' ? 'mph' : 'm/s'}`
+    }
 
     const getCurrentLocation = () => {
       if (
@@ -107,17 +114,12 @@ export default defineComponent({
       emit("removeCard")
     }
 
-    const convertToCelsius = (tempF) => {
-      const tempC = ((tempF - 32) * 5) / 9
-      return tempC.toFixed(2)
-    }
-
     return {
       formattedDate,
       getCurrentLocation,
       getWeatherIconURL,
       removeCard,
-      convertToCelsius,
+      formatWindSpeed,
     }
   },
 })

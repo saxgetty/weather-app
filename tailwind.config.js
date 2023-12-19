@@ -4,6 +4,9 @@ export default {
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
+  daisyui: {
+    themes: ["light", "dark", "cupcake"],
+  },
   theme: {
     extend: {
       fontFamily: {
@@ -11,6 +14,6 @@ export default {
       }
     },
   },
-  plugins: [],
+  plugins: [require("daisyui")],
 }
 
