@@ -1,7 +1,7 @@
 <template>
   <div class="grid grid-cols-10 gap-4 w-full sm:max-w-screen-sm">
     <div class="flex justify-end col-span-full">
-      <RadioTheme />
+      <SelectTheme />
       <UnitToggle :unitType="unitType" @toggleUnit="toggleUnit" />
     </div>
     <!-- Search Bar -->
@@ -53,14 +53,14 @@
 import { ref, onMounted, onBeforeUnmount } from "vue"
 import { fetchWeather, fetchWeatherByCoords } from "@/services/WeatherService"
 import WeatherCard from "@/components/WeatherCard.vue"
-import RadioTheme from "@/components/RadioTheme.vue"
+import SelectTheme from "@/components/SelectTheme.vue"
 import UnitToggle from "@/components/UnitToggle.vue"
 
 export default {
   name: "Weather",
   components: {
     WeatherCard,
-    RadioTheme,
+    SelectTheme,
     UnitToggle,
   },
   setup() {
