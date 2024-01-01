@@ -6,8 +6,8 @@ export default {
   ],
   daisyui: {
     themes: [
-      "light",
       "dark",
+      "garden",
       "cupcake",
       "bumblebee",
       "emerald",
@@ -17,7 +17,7 @@ export default {
       "cyberpunk",
       "valentine",
       "halloween",
-      "garden",
+      "light",
       "forest",
       "aqua",
       "lofi",
