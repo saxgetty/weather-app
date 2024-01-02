@@ -79,7 +79,7 @@ export default defineComponent({
     })
 
     const formatWindSpeed = computed(() => {
-      return `${props.unitType === 'imperial' ? 'mph' : 'm/s'}`
+      return `${props.unitType === 'imperial' ? 'mi/h' : 'km/h'}`
     })
 
     const getCurrentLocation = () => {

@@ -79,10 +79,10 @@ export default {
     }
 
     const convertSpeed = (speed, unitType) => {
-      if (unitType === "imperial") {
-        return speed * 2.23694 // m/s to mph conversion factor
+      if (unitType === "metric") {
+        return Number(speed * 1.609344).toFixed(2) // mi\h to km\h conversion factor
       } else {
-        return speed * 3.6 // m/s to km/h conversion factor
+        return Number(speed * 0.6213711922).toFixed(2) // km\h to mi\h conversion factor
       }
     }
 
