@@ -1,5 +1,5 @@
 <template>
-  <div class="transition duration-500 ease-in-out transform bg-white rounded-xl hover:scale-105 border flex flex-col justify-center items-center text-center p-6">
+  <div class="transition duration-500 ease-in-out transform bg-white rounded-3xl hover:scale-105 border flex flex-col justify-center items-center text-center p-6">
     <button
       class="absolute top-2 right-2 text-red-500"
       @click="removeCard"
@@ -13,7 +13,7 @@
           {{ getCurrentLocation() }}
           <!-- Additional Weather Details -->
           <p v-if="weatherData.main">
-            {{ weatherData.main.temp }} °F
+            {{ weatherData.main.temp }} {{ formatTemperature }}
           </p>
           <div class="flex items-center justify-center">
             <img
@@ -26,7 +26,7 @@
             />
           </div>
           <p v-if="weatherData.wind">
-            {{ weatherData.wind.speed }} m/s
+            {{ weatherData.wind.speed }} {{ formatWindSpeed }}
           </p>
           <!-- Add more weather details as needed -->
         </div>
@@ -43,9 +43,8 @@
   </div>
 </template>
 
-
 <script>
-import { defineComponent, ref } from "vue"
+import { defineComponent, watch, computed } from "vue"
 import LoadingCircle from "@/components/LoadingCircle.vue"
 import { BaseIconService } from "@/services/BaseIconService"
 
@@ -63,6 +62,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    unitType: {
+      type: String, 
+      default: "imperial", 
+    },
   },
   setup(props, { emit }) {
     const currentDate = new Date()
@@ -70,6 +73,14 @@ export default defineComponent({
     const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
       currentDate
     )
+
+    const formatTemperature = computed(() => {
+      return `${props.unitType === 'imperial' ? '°F' : '°C'}`
+    })
+
+    const formatWindSpeed = computed(() => {
+      return `${props.unitType === 'imperial' ? 'mi/h' : 'km/h'}`
+    })
 
     const getCurrentLocation = () => {
       if (
@@ -103,21 +114,19 @@ export default defineComponent({
     }
 
     const removeCard = () => {
-      // Emit an event to notify the parent component about removal
       emit("removeCard")
     }
 
-    const convertToCelsius = (tempF) => {
-      const tempC = ((tempF - 32) * 5) / 9
-      return tempC.toFixed(2)
-    }
+    watch(() => props.unitType, () => {
+    })
 
     return {
       formattedDate,
       getCurrentLocation,
       getWeatherIconURL,
       removeCard,
-      convertToCelsius,
+      formatWindSpeed,
+      formatTemperature,
     }
   },
 })

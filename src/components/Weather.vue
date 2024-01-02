@@ -1,9 +1,13 @@
 <template>
   <div class="grid grid-cols-10 gap-4 w-full sm:max-w-screen-sm">
+    <div class="flex justify-end col-span-full">
+      <SelectTheme />
+      <UnitToggle :unitType="unitType" @toggleUnit="toggleUnit" />
+    </div>
     <!-- Search Bar -->
     <div class="col-span-full">
       <input
-        class="relative w-full rounded-xl border-2 border-gray-300 text-gray-600 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
+        class="relative w-full rounded-2xl border-2 border-gray-300 text-gray-600 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
         type="search"
         name="search"
         placeholder="Search"
@@ -24,6 +28,7 @@
         :key="'base'"
         :removable="false"
         :error="error"
+        :unitType="unitType"
         class="col-span-full h-80"
       />
     </template>
@@ -37,6 +42,7 @@
         :removable="true"
         @removeCard="removeCard(index)"
         :error="error"
+        :unitType="unitType"
         class="col-span-5 h-96"
       />
     </template>
@@ -47,17 +53,59 @@
 import { ref, onMounted, onBeforeUnmount } from "vue"
 import { fetchWeather, fetchWeatherByCoords } from "@/services/WeatherService"
 import WeatherCard from "@/components/WeatherCard.vue"
+import SelectTheme from "@/components/SelectTheme.vue"
+import UnitToggle from "@/components/UnitToggle.vue"
 
 export default {
   name: "Weather",
   components: {
     WeatherCard,
+    SelectTheme,
+    UnitToggle,
   },
   setup() {
     const cityInput = ref("")
     const baseWeatherData = ref(null)
     const additionalWeatherData = ref([])
     const error = ref(null)
+    const unitType = ref("imperial")
+
+    const convertTemperature = (temperature, toUnit) => {
+      if (toUnit === "metric") {
+        return Number(((temperature - 32) * 5) / 9).toFixed(2) // Fahrenheit to Celsius conversion
+      } else {
+        return Number((temperature * 9) / 5 + 32).toFixed(2) // Celsius to Fahrenheit conversion
+      }
+    }
+
+    const convertSpeed = (speed, unitType) => {
+      if (unitType === "metric") {
+        return Number(speed * 1.609344).toFixed(2) // mi\h to km\h conversion factor
+      } else {
+        return Number(speed * 0.6213711922).toFixed(2) // km\h to mi\h conversion factor
+      }
+    }
+
+    const toggleUnit = (isChecked) => {
+      unitType.value = isChecked ? "imperial" : "metric"
+
+      if (baseWeatherData.value) {
+        baseWeatherData.value.main.temp = convertTemperature(
+          baseWeatherData.value.main.temp,
+          unitType.value
+        )
+
+        baseWeatherData.value.wind.speed = convertSpeed(
+          baseWeatherData.value.wind.speed,
+          unitType.value
+        )
+      }
+
+      additionalWeatherData.value.forEach((data) => {
+        data.main.temp = convertTemperature(data.main.temp, unitType.value)
+        data.wind.speed = convertSpeed(data.wind.speed, unitType.value)
+      })
+    }
 
     const fetchWeatherByCoordinates = async (position) => {
       try {
@@ -105,7 +153,7 @@ export default {
           } else {
             error.value = "Maximum limit reached for additional locations."
           }
-          cityInput.value = "" // Resetting the input after search
+          cityInput.value = ""
         } else {
           error.value = "Please enter a city name"
         }
@@ -160,6 +208,8 @@ export default {
     })
 
     return {
+      unitType,
+      toggleUnit,
       cityInput,
       baseWeatherData,
       additionalWeatherData,
