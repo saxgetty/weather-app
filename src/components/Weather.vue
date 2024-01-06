@@ -1,8 +1,8 @@
 <template>
   <div class="grid grid-cols-10 gap-4 w-full sm:max-w-screen-sm">
-    <div class="flex justify-end col-span-full">
-      <SelectTheme />
+    <div class="flex justify-between col-span-full">
       <UnitToggle :unitType="unitType" @toggleUnit="toggleUnit" />
+      <SelectTheme />
     </div>
     <!-- Search Bar -->
     <div class="col-span-full">
