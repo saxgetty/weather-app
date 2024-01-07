@@ -1,45 +1,60 @@
 <template>
-  <div class="transition duration-500 ease-in-out transform bg-white rounded-3xl hover:scale-105 border flex flex-col justify-center items-center text-center p-6">
-    <button
-      class="absolute top-2 right-2 text-red-500"
-      @click="removeCard"
-      v-if="removable"
-    >
-      X
+  <div
+    class="card bg-white shadow-lg p-20 rounded-3xl transition duration-500 ease-in-out transform hover:scale-105"
+  >
+    <button class="btn btn-circle btn-outline absolute top-6 right-6" @click="removeCard" v-if="removable">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
     </button>
-    <div class="text-md font-bold flex flex-col text-gray-900">
-      <span class="uppercase">
-        <div v-if="weatherData">
-          {{ getCurrentLocation() }}
-          <!-- Additional Weather Details -->
-          <p v-if="weatherData.main">
-            {{ weatherData.main.temp }} {{ formatTemperature }}
-          </p>
-          <div class="flex items-center justify-center">
-            <img
-              v-if="weatherData.weather && weatherData.weather.length > 0"
-              :src="getWeatherIconURL(weatherData)"
-              class="mx-auto"
-              alt="Weather Icon"
-              width="64"
-              height="64"
-            />
-          </div>
-          <p v-if="weatherData.wind">
-            {{ weatherData.wind.speed }} {{ formatWindSpeed }}
-          </p>
-          <!-- Add more weather details as needed -->
+    <div class="flex justify-between items-start">
+      <!-- Left section: Weather icon and Right section: Location, date -->
+      <div class="flex items-start">
+        <!-- Weather icon -->
+        <div class="mr-4">
+          <img
+            v-if="weatherData.weather && weatherData.weather.length > 0"
+            :src="getWeatherIconURL(weatherData)"
+            alt="Weather Icon"
+            width="64"
+            height="64"
+          />
         </div>
-        <div v-else-if="error" class="text-red-500">
-          {{ error }}
+
+        <!-- Location and Date -->
+        <div>
+          <p class="font-bold text-3xl">{{ getCurrentLocation() }}</p>
+          <p class="text-lg">{{ formattedDate }}</p>
         </div>
-        <div v-else>
-          <LoadingCircle />
-        </div>
-      </span>
-      <span class="font-normal text-gray-700 text-sm">{{ formattedDate }}</span>
+      </div>
+
+      <!-- Right section: Temperature and wind speed -->
+      <div class="flex flex-col items-end">
+        <p class="font-bold text-3xl">
+          {{ weatherData.main.temp }} {{ formatTemperature }}
+        </p>
+        <p class="text-lg">
+          {{ weatherData.wind.speed }} {{ formatWindSpeed }}
+        </p>
+      </div>
     </div>
-    <!-- Other weather details here -->
+
+    <!-- Bottom section: Days of the week temperatures -->
+    <div class="pt-20 text-center">
+      <!-- Placeholder for days of the week temperatures -->
+      <p>Days of the week temperatures</p>
+    </div>
   </div>
 </template>
 
@@ -63,8 +78,8 @@ export default defineComponent({
       default: false,
     },
     unitType: {
-      type: String, 
-      default: "imperial", 
+      type: String,
+      default: "imperial",
     },
   },
   setup(props, { emit }) {
@@ -75,11 +90,11 @@ export default defineComponent({
     )
 
     const formatTemperature = computed(() => {
-      return `${props.unitType === 'imperial' ? '°F' : '°C'}`
+      return `${props.unitType === "imperial" ? "°F" : "°C"}`
     })
 
     const formatWindSpeed = computed(() => {
-      return `${props.unitType === 'imperial' ? 'mi/h' : 'km/h'}`
+      return `${props.unitType === "imperial" ? "mph" : "km/h"}`
     })
 
     const getCurrentLocation = () => {
@@ -89,7 +104,7 @@ export default defineComponent({
         props.weatherData.sys &&
         props.weatherData.sys.country
       ) {
-        return `${props.weatherData.name}, ${props.weatherData.sys.country}`
+        return `${props.weatherData.name}`
       } else if (props.weatherData && props.weatherData.name) {
         return props.weatherData.name
       }
@@ -117,8 +132,10 @@ export default defineComponent({
       emit("removeCard")
     }
 
-    watch(() => props.unitType, () => {
-    })
+    watch(
+      () => props.unitType,
+      () => {}
+    )
 
     return {
       formattedDate,

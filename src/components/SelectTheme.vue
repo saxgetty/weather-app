@@ -5,8 +5,10 @@
       @change="changeTheme"
     >
       <option disabled selected>Theme</option>
+      <option>coffee</option>
       <option>retro</option>
-      <option>fantasy</option>
+      <option>sunset</option>
+      <option>valentine</option>
     </select>
   </div>
 </template>
