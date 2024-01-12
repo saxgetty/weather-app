@@ -20,14 +20,14 @@ export async function fetchWeather(city) {
   }
 }
 
-export async function fetchWeatherForecast(city, numberOfDays) {
+export async function fetchEightDayForecast(city) {
   try {
-    const response = await axios.get(`${eightDayForecast}`, {
+    const response = await axios.get(eightDayForecast, {
       params: {
         q: city,
         appid: apiKey,
         units: "imperial",
-        cnt: parseInt(numberOfDays),
+        cnt: 8, // Set the number of days for the forecast
       },
     })
 

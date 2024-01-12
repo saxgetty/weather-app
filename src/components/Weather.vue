@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-10 gap-4 w-full sm:max-w-screen-sm">
+  <div class="grid grid-cols-10 gap-4 w-full sm:max-w-screen-sm mt-10">
     <div class="flex justify-between col-span-full">
       <UnitToggle :unitType="unitType" @toggleUnit="toggleUnit" />
       <SelectTheme />
