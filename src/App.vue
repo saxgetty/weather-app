@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <!-- <div>
     <ul>
       <li>
         <router-link :to="{ name: 'home' }">Weather Application</router-link>
       </li>
     </ul>
-  </div>
+  </div> -->
   <router-view />
 </template>
 

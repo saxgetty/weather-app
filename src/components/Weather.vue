@@ -1,13 +1,13 @@
 <template>
-  <div class="grid grid-cols-10 gap-4 w-full sm:max-w-screen-sm">
-    <div class="flex justify-end col-span-full">
-      <SelectTheme />
+  <div class="grid grid-cols-10 gap-4 w-full sm:max-w-screen-sm mt-10">
+    <div class="flex justify-between col-span-full">
       <UnitToggle :unitType="unitType" @toggleUnit="toggleUnit" />
+      <SelectTheme />
     </div>
     <!-- Search Bar -->
     <div class="col-span-full">
       <input
-        class="relative w-full rounded-2xl border-2 border-gray-300 text-gray-600 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
+        class="relative w-full rounded-3xl shadow-lg bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
         type="search"
         name="search"
         placeholder="Search"
@@ -43,7 +43,7 @@
         @removeCard="removeCard(index)"
         :error="error"
         :unitType="unitType"
-        class="col-span-5 h-96"
+        class="col-span-full h-80"
       />
     </template>
   </div>
@@ -80,9 +80,9 @@ export default {
 
     const convertSpeed = (speed, unitType) => {
       if (unitType === "metric") {
-        return Number(speed * 1.609344).toFixed(2) // mi\h to km\h conversion factor
+        return Number(speed * 1.609344).toFixed(2) // mph to km\h conversion
       } else {
-        return Number(speed * 0.6213711922).toFixed(2) // km\h to mi\h conversion factor
+        return Number(speed * 0.6213711922).toFixed(2) // km\h to mph conversion
       }
     }
 
