@@ -13,7 +13,7 @@
     "@heroicons/vue": "^2.1.1",
     "axios": "^1.6.5",
     "dotenv": "^16.3.2",
-    "gsap": "^3.12.4",
+    "gsap": "^3.12.5",
     "theme-change": "^2.5.0",
     "vue": "^3.4.15",
     "vue-feather-icons": "^5.1.0",
