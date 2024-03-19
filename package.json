@@ -17,7 +17,7 @@
     "theme-change": "^2.5.0",
     "vue": "^3.4.21",
     "vue-feather-icons": "^5.1.0",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.3.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
