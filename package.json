@@ -15,7 +15,7 @@
     "dotenv": "^16.4.5",
     "gsap": "^3.12.5",
     "theme-change": "^2.5.0",
-    "vue": "^3.4.21",
+    "vue": "^3.4.29",
     "vue-feather-icons": "^5.1.0",
     "vue-router": "^4.3.0"
   },
